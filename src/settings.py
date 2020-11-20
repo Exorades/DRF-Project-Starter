@@ -19,11 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5@_^ruqll_1xw3!e=kqme2*l6^1c=ag(x2trj&(lp9i%_8=-s2'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
+DEBUG = os.environ.get("DEBUG") in (1, "1", "True", "true")
 
 ALLOWED_HOSTS = []
 
@@ -74,12 +71,16 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("BACKEND_POSTGRES_NAME", None),
+        "USER": os.environ.get("BACKEND_POSTGRES_USER", None),
+        "PASSWORD": os.environ.get("BACKEND_POSTGRES_PASSWORD", None),
+        "HOST": os.environ.get("BACKEND_POSTGRES_HOST", None),
+        "PORT": os.environ.get("BACKEND_POSTGRES_PORT", 5432),
+        "OPTIONS": {"sslmode": os.environ.get("BACKEND_POSTGRES_SSLMODE", None)},
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
